@@ -1,22 +1,39 @@
 package com.pluralsight.choosing_right_collection.service;
 
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
+import java.util.LinkedHashSet;
+import java.util.Optional;
+import java.util.Set;
 
-import java.util.LinkedList;
-import java.util.List;
+//    E-commerce: Shopping Cart Operations
 
 @Service
-public class CartService {
+public class CartService
+{
 
-    //    7. E-commerce: Shopping Cart Operations
+    Set<Order> cart = new LinkedHashSet<>();
 
-    public List<String> getCartItems() {
-        LinkedList<String> cart = new LinkedList<>();
-        cart.add("Shoes");
-        cart.add("T-shirt");
-        cart.add("Watch");
-        cart.removeLast(); // Simulate user removing last item
+    public Set<Order> getCartItems() {
         return cart;
     }
+
+    public void addItem(Order order)
+    {
+        cart.add(order);
+    }
+
+    public void remove(int id)
+    {
+        Optional<Order> optionalOrder = cart.stream().filter(order2 -> order2.getId() == id  ).findAny();
+        optionalOrder.ifPresent(order -> cart.remove(order));
+    }
+
+    public void modifyOrder(Order order)
+    {
+        Optional<Order> optionalOrder = cart.stream().filter(order2 -> order2.getId() == order.getId()  ).findAny();
+        cart.remove(order);
+        cart.add(order);
+    }
+
+
 }

@@ -1,28 +1,44 @@
 package com.pluralsight.choosing_right_collection.controllers;
 
+import com.pluralsight.choosing_right_collection.service.CartService;
+import com.pluralsight.choosing_right_collection.service.Order;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.Mapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/cart")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class CartController {
 
-    //    7. E-commerce: Shopping Cart Operations
+    private final CartService cartService;
+
+
     @GetMapping
-    public List<String> getCartItems() {
-        LinkedList<String> cart = new LinkedList<>();
-        cart.add("Shoes");
-        cart.add("T-shirt");
-        cart.add("Watch");
-        cart.removeLast(); // Simulate user removing last item
-        return cart;
+    public Set<Order> getCartItems() {
+
+        return cartService.getCartItems();
     }
 
+    @PostMapping
+    public void  add(@RequestBody Order order)
+    {
+         cartService.addItem(order);
+    }
+
+    @PutMapping
+    public void put(@RequestBody Order order)
+    {
+        cartService.modifyOrder(order);
+    }
+
+    @DeleteMapping("{id}")
+    public void delete(@PathVariable int id)
+    {
+        cartService.remove(id);
+    }
 }
